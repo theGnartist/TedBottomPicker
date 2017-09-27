@@ -526,12 +526,14 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
             view_header_container.setVisibility(View.GONE);
         } else {
             view_header_container.setVisibility(View.VISIBLE);
+            btn_camera.setImageDrawable(builder.cameraTileDrawable);
             btn_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startCameraIntent();
                 }
             });
+            btn_gallery.setImageDrawable(builder.galleryTileDrawable);
             btn_gallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
