@@ -179,6 +179,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         initView(contentView);
 
         setTitle();
+        setHeader();
         setRecyclerView();
         setSelectionView();
 
