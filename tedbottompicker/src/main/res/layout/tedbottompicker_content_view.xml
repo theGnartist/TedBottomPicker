@@ -6,7 +6,29 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
     >
-
+    <LinearLayout
+        android:id="@+id/view_header_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <ImageButton
+            android:id="@+id/button_header_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera"
+            android:background="@android:color/transparent"
+            android:padding="5dp"
+            />
+        <ImageButton
+            android:id="@+id/button_header_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_gallery"
+            android:background="@android:color/transparent"
+            android:padding="5dp"
+            />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/view_title_container"
         android:layout_width="match_parent"

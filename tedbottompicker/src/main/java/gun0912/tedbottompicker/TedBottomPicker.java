@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -35,9 +36,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -70,6 +73,9 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     static final String EXTRA_CAMERA_SELECTED_IMAGE_URI = "camera_selected_image_uri";
     public Builder builder;
     ImageGalleryAdapter imageGalleryAdapter;
+    View view_header_container;
+    ImageButton btn_camera;
+    ImageButton btn_gallery;
     View view_title_container;
     TextView tv_title;
     Button btn_done;
@@ -246,7 +252,12 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
     private void initView(View contentView) {
 
+        view_header_container = contentView.findViewById(R.id.view_header_container);
+        btn_camera = (ImageButton)contentView.findViewById(R.id.button_header_camera);
+        btn_gallery = (ImageButton)contentView.findViewById(R.id.button_header_gallery);
+
         view_title_container = contentView.findViewById(R.id.view_title_container);
+
         rc_gallery = (RecyclerView) contentView.findViewById(R.id.rc_gallery);
         tv_title = (TextView) contentView.findViewById(R.id.tv_title);
         btn_done = (Button) contentView.findViewById(R.id.btn_done);
@@ -509,6 +520,26 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
     }
 
+    private void setHeader(){
+        if(!builder.showHeader){
+            view_header_container.setVisibility(View.GONE);
+        } else {
+            view_header_container.setVisibility(View.VISIBLE);
+            btn_camera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startCameraIntent();
+                }
+            });
+            btn_gallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startGalleryIntent();
+                }
+            });
+        }
+    }
+
     private boolean isMultiSelect() {
         return builder.onMultiImageSelectedListener != null;
     }
@@ -637,6 +668,8 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         public String title;
         public boolean showTitle = true;
         public int titleBackgroundResId;
+
+        public boolean showHeader = false;
 
         public int selectMaxCount = Integer.MAX_VALUE;
         public int selectMinCount = 0;
@@ -783,6 +816,11 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         public Builder showTitle(boolean showTitle) {
             this.showTitle = showTitle;
+            return this;
+        }
+
+        public Builder showHeader(boolean showHeader){
+            this.showHeader = showHeader;
             return this;
         }
 
