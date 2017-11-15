@@ -486,6 +486,8 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
     private void startGalleryIntent() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/png", "image/jpeg"});
         if (galleryIntent.resolveActivity(getActivity().getPackageManager()) == null) {
             errorMessage("This Application do not have Gallery Application");
             return;
