@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<item
+        app:state_video="true"
+        android:drawable="@drawable/camera_video" />
+    <item
+        app:state_video="false"
+        android:drawable="@drawable/camera_photo" />
+</selector>

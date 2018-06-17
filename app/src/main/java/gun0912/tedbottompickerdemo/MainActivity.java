@@ -23,7 +23,7 @@ import com.gun0912.tedpermission.TedPermission;
 import java.util.ArrayList;
 
 import gun0912.tedbottompicker.TedBottomPicker;
-
+import gun0912.tedbottompicker.TedBottomPicker.Builder.MediaType;
 public class MainActivity extends AppCompatActivity {
 
 
@@ -77,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 })
                                 //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
+                                .setMediaType(MediaType.VIDEO_AND_IMAGE)
+                                .showCameraButton(true)
+                                .showCameraTile(false)
+                                .showTitle(false)
                                 .setSelectedUri(selectedUri)
-                                //.showVideoMedia()
                                 .setPeekHeight(1200)
                                 .create();
 
