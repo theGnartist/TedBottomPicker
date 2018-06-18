@@ -618,7 +618,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     }
 
     private @Builder.MimeType String getMimeType(){
-        switch (builder.mediaType) {
+        switch (selectedMediaType) {
             case (Builder.MediaType.IMAGE) : return Builder.MimeType.IMAGE;
             case (Builder.MediaType.VIDEO) : return Builder.MimeType.VIDEO;
             default: return Builder.MimeType.WILDCARD;
