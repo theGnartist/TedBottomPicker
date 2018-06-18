@@ -59,7 +59,6 @@ import java.util.Locale;
 
 import gun0912.tedbottompicker.adapter.GalleryAdapter;
 import gun0912.tedbottompicker.util.RealPathUtil;
-import gun0912.tedbottompicker.view.PhotoVideoToggleButton;
 
 public class TedBottomPicker extends BottomSheetDialogFragment {
 
@@ -73,8 +72,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     TextView tv_title;
     Button btn_done;
     Button btn_toggle;
-    PhotoVideoToggleButton btn_camera;
-
 
     FrameLayout selected_photos_container_frame;
     HorizontalScrollView hsv_selected_photos;
@@ -192,7 +189,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         setDoneButton();
         checkMultiMode();
         setToggleButton();
-        setCameraButton();
     }
 
     private void setSelectionView() {
@@ -221,21 +217,10 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         });
     }
 
-    private void setCameraButton() {
-        if (builder.isShowCameraButton) {
-            btn_camera.setVisibility(View.VISIBLE);
-            btn_camera.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startCameraIntent();
-                }
-            });
-        } else {
-            btn_camera.setVisibility(View.GONE);
-        }
-    }
-
     private void setToggleButton() {
+        if (builder.mediaType != Builder.MediaType.VIDEO_AND_IMAGE) {
+            btn_toggle.setVisibility(View.GONE);
+        }
         btn_toggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,7 +229,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         });
         String title = Builder.MediaType.VIDEO == selectedMediaType ? "Video" : "Photo";
         btn_toggle.setText(title);
-        btn_camera.setVideo(Builder.MediaType.VIDEO == selectedMediaType);
     }
 
     private void toggleMediaType() {
@@ -255,7 +239,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         }
         String title = Builder.MediaType.VIDEO == selectedMediaType ? "Video" : "Photo";
         btn_toggle.setText(title);
-        btn_camera.setVideo(Builder.MediaType.VIDEO == selectedMediaType);
         updateAdapter();
     }
 
@@ -303,7 +286,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         tv_title = (TextView) contentView.findViewById(R.id.tv_title);
         btn_done = (Button) contentView.findViewById(R.id.btn_done);
         btn_toggle = (Button) contentView.findViewById(R.id.btn_toggle);
-        btn_camera = (PhotoVideoToggleButton) contentView.findViewById(R.id.btn_camera);
 
         selected_photos_container_frame = (FrameLayout) contentView.findViewById(R.id.selected_photos_container_frame);
         hsv_selected_photos = (HorizontalScrollView) contentView.findViewById(R.id.hsv_selected_photos);
@@ -611,10 +593,10 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     private void setTitle() {
 
         if (!builder.showTitle) {
-            tv_title.setVisibility(View.INVISIBLE);
+            tv_title.setVisibility(View.GONE);
 
             if (!isMultiSelect()) {
-                view_title_container.setVisibility(View.INVISIBLE);
+                view_title_container.setVisibility(View.GONE);
             }
 
             return;
@@ -820,11 +802,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         public Builder showCameraTile(boolean showCamera) {
             this.showCamera = showCamera;
-            return this;
-        }
-
-        public Builder showCameraButton(boolean showCamera) {
-            this.isShowCameraButton = showCamera;
             return this;
         }
 
