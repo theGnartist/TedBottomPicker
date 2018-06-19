@@ -43,9 +43,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     TedBottomPicker.Builder builder;
     OnItemClickListener onItemClickListener;
     ArrayList<Uri> selectedUriList;
+    @TedBottomPicker.Builder.MediaType int selectedMediaType;
 
-
-    public GalleryAdapter(Context context, TedBottomPicker.Builder builder) {
+    public GalleryAdapter(Context context,
+                          TedBottomPicker.Builder builder,
+                          @TedBottomPicker.Builder.MediaType int selectedMediaType) {
 
         this.context = context;
         this.builder = builder;
@@ -60,13 +62,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         if (builder.showGallery) {
             pickerTiles.add(new PickerTile(PickerTile.GALLERY));
         }
-
+        this.selectedMediaType = selectedMediaType;
         Cursor cursor = null;
         try {
             String[] columns;
             String orderBy;
             Uri uri;
-            if (builder.mediaType == TedBottomPicker.Builder.MediaType.IMAGE) {
+            if (selectedMediaType == TedBottomPicker.Builder.MediaType.IMAGE) {
                 uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 columns = new String[]{MediaStore.Images.Media.DATA};
                 orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
@@ -89,7 +91,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                 while (cursor.moveToNext() && count < builder.previewMaxCount) {
 
                     String dataIndex;
-                    if (builder.mediaType == TedBottomPicker.Builder.MediaType.IMAGE) {
+                    if (selectedMediaType == TedBottomPicker.Builder.MediaType.IMAGE) {
                         dataIndex = MediaStore.Images.Media.DATA;
                     }else{
                         dataIndex = MediaStore.Video.VideoColumns.DATA;

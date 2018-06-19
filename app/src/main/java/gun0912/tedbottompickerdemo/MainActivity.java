@@ -23,7 +23,7 @@ import com.gun0912.tedpermission.TedPermission;
 import java.util.ArrayList;
 
 import gun0912.tedbottompicker.TedBottomPicker;
-
+import gun0912.tedbottompicker.TedBottomPicker.Builder.MediaType;
 public class MainActivity extends AppCompatActivity {
 
 
@@ -43,9 +43,65 @@ public class MainActivity extends AppCompatActivity {
         requestManager = Glide.with(this);
         setSingleShowButton();
         setSingleShowVideoShowButton();
+        setSingleShowVideoAndImageButton();
         setMultiShowButton();
 
 
+    }
+
+    private void setSingleShowVideoAndImageButton() {
+
+        Button btn_single_show = (Button) findViewById(R.id.btn_single_show_video_and_image);
+        btn_single_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PermissionListener permissionlistener = new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+
+                        TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(MainActivity.this)
+                                .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                                    @Override
+                                    public void onImageSelected(final Uri uri) {
+                                        Log.d("ted", "uri: " + uri);
+                                        Log.d("ted", "uri.getPath(): " + uri.getPath());
+                                        selectedUri = uri;
+
+                                        iv_image.setVisibility(View.VISIBLE);
+                                        mSelectedImagesContainer.setVisibility(View.GONE);
+                                        requestManager
+                                                .load(uri)
+                                                .into(iv_image);
+                                    }
+                                })
+                                //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
+                                .setSelectedUri(selectedUri)
+                                .setTitle("Select Video")
+                                .setMediaType(MediaType.VIDEO_AND_IMAGE)
+                                .setPeekHeight(1200)
+                                .create();
+
+                        bottomSheetDialogFragment.show(getSupportFragmentManager());
+
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                        Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+
+                };
+
+                TedPermission.with(MainActivity.this)
+                        .setPermissionListener(permissionlistener)
+                        .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .check();
+
+            }
+        });
     }
 
     private void setSingleShowVideoShowButton() {
@@ -76,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                                 //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
                                 .setSelectedUri(selectedUri)
                                 .setTitle("Select Video")
-                                .showVideoMedia()
+                                .setMediaType(MediaType.VIDEO)
                                 .setPeekHeight(1200)
                                 .create();
 
@@ -133,8 +189,10 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 })
                                 //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
+                                .setMediaType(MediaType.IMAGE)
+                                .showCameraTile(true)
+                                .showTitle(false)
                                 .setSelectedUri(selectedUri)
-                                //.showVideoMedia()
                                 .setPeekHeight(1200)
                                 .create();
 
