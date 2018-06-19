@@ -685,6 +685,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         public Context context;
         public int previewMaxCount = 25;
         public Drawable cameraTileDrawable;
+        public Drawable videoCameraTileDrawable;
         public Drawable galleryTileDrawable;
 
         public Drawable deSelectIconDrawable;
@@ -698,7 +699,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         public ImageProvider imageProvider;
         public boolean showCamera = true;
         public boolean showGallery = true;
-        public boolean isShowCameraButton = true;
         public int peekHeight = -1;
         public int cameraTileBackgroundResId = R.color.tedbottompicker_camera;
         public int galleryTileBackgroundResId = R.color.tedbottompicker_gallery;
@@ -726,11 +726,17 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
             setCameraTile(R.drawable.ic_camera);
             setGalleryTile(R.drawable.ic_gallery);
+            setVideoCameraTile(R.drawable.ic_clear);
             setSpacingResId(R.dimen.tedbottompicker_grid_layout_margin);
         }
 
         public Builder setCameraTile(@DrawableRes int cameraTileResId) {
             setCameraTile(ContextCompat.getDrawable(context, cameraTileResId));
+            return this;
+        }
+
+        public Builder setVideoCameraTile(@DrawableRes int cameraTileResId) {
+            setVideoCameraTile(ContextCompat.getDrawable(context, cameraTileResId));
             return this;
         }
 
@@ -746,6 +752,11 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         public Builder setCameraTile(Drawable cameraTileDrawable) {
             this.cameraTileDrawable = cameraTileDrawable;
+            return this;
+        }
+
+        public Builder setVideoCameraTile(Drawable videoCameraTileDrawable) {
+            this.videoCameraTileDrawable = videoCameraTileDrawable;
             return this;
         }
 

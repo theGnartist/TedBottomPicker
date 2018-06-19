@@ -159,7 +159,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 
         if (pickerTile.isCameraTile()) {
             holder.iv_thumbnail.setBackgroundResource(builder.cameraTileBackgroundResId);
-            holder.iv_thumbnail.setImageDrawable(builder.cameraTileDrawable);
+            Drawable cameraDrawable =
+                    (TedBottomPicker.Builder.MediaType.VIDEO == selectedMediaType
+                            && builder.videoCameraTileDrawable != null) ?
+                            builder.videoCameraTileDrawable : builder.cameraTileDrawable;
+            holder.iv_thumbnail.setImageDrawable(cameraDrawable);
         } else if (pickerTile.isGalleryTile()) {
             holder.iv_thumbnail.setBackgroundResource(builder.galleryTileBackgroundResId);
             holder.iv_thumbnail.setImageDrawable(builder.galleryTileDrawable);
