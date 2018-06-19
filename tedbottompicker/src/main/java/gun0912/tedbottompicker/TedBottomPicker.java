@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -20,7 +21,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -73,11 +73,14 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     View view_title_container;
     TextView tv_title;
     Button btn_done;
-    Button btn_toggle;
+    Button btn_video;
+    Button btn_photo;
+
 
     FrameLayout selected_photos_container_frame;
     HorizontalScrollView hsv_selected_photos;
     LinearLayout selected_photos_container;
+    View select_media_type_container;
 
     TextView selected_photos_empty;
     View contentView;
@@ -174,6 +177,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         initView(contentView);
 
         setTitle();
+        initMediaToggle();
         setRecyclerView();
         setSelectionView();
 
@@ -190,7 +194,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
         setDoneButton();
         checkMultiMode();
-        setToggleButton();
     }
 
     private void setSelectionView() {
@@ -217,31 +220,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
             }
         });
-    }
-
-    private void setToggleButton() {
-        if (builder.mediaType != Builder.MediaType.VIDEO_AND_IMAGE) {
-            btn_toggle.setVisibility(View.GONE);
-        }
-        btn_toggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleMediaType();
-            }
-        });
-        String title = Builder.MediaType.VIDEO == selectedMediaType ? "Video" : "Photo";
-        btn_toggle.setText(title);
-    }
-
-    private void toggleMediaType() {
-        if (Builder.MediaType.IMAGE == selectedMediaType){
-            selectedMediaType = Builder.MediaType.VIDEO;
-        } else {
-            selectedMediaType = Builder.MediaType.IMAGE;
-        }
-        String title = Builder.MediaType.VIDEO == selectedMediaType ? "Video" : "Photo";
-        btn_toggle.setText(title);
-        updateAdapter();
     }
 
     private void onMultiSelectComplete() {
@@ -271,14 +249,32 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
 
     }
 
-    private void checkMediaType() {
-        if (Builder.MediaType.VIDEO_AND_IMAGE == builder.mediaType) {
-            btn_toggle.setVisibility(View.VISIBLE);
-            selectedMediaType = Builder.MediaType.IMAGE;
+    private void initMediaToggle() {
+        if (builder.mediaTypes != null  && builder.mediaTypes.length > 0) {
+           view_title_container.setVisibility(View.VISIBLE);
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btn_photo.setSelected(false);
+                    btn_video.setSelected(false);
+                    btn_photo.setTypeface(Typeface.DEFAULT);
+                    btn_video.setTypeface(Typeface.DEFAULT);
+
+                    v.setSelected(true);
+                    ((Button)v).setTypeface(Typeface.DEFAULT_BOLD);
+                    selectedMediaType = (int) v.getTag();
+                    updateAdapter();
+                }
+            };
+            btn_photo.setSelected(true);
+            btn_photo.setTag(builder.mediaTypes[0]);
+            btn_photo.setOnClickListener(clickListener);
+            btn_video.setTag(builder.mediaTypes[1]);
+            btn_video.setOnClickListener(clickListener);
         } else {
-            btn_toggle.setVisibility(View.GONE);
-            selectedMediaType = builder.mediaType;
+            view_title_container.setVisibility(View.GONE);
         }
+        selectedMediaType = builder.mediaTypes[0];
     }
 
     private void initView(View contentView) {
@@ -287,8 +283,10 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         rc_gallery = (RecyclerView) contentView.findViewById(R.id.rc_gallery);
         tv_title = (TextView) contentView.findViewById(R.id.tv_title);
         btn_done = (Button) contentView.findViewById(R.id.btn_done);
-        btn_toggle = (Button) contentView.findViewById(R.id.btn_toggle);
+        btn_photo = (Button) contentView.findViewById(R.id.btn_photo);
+        btn_video = (Button) contentView.findViewById(R.id.btn_video);
 
+        select_media_type_container = contentView.findViewById(R.id.view_media_type_container);
         selected_photos_container_frame = (FrameLayout) contentView.findViewById(R.id.selected_photos_container_frame);
         hsv_selected_photos = (HorizontalScrollView) contentView.findViewById(R.id.hsv_selected_photos);
         selected_photos_container = (LinearLayout) contentView.findViewById(R.id.selected_photos_container);
@@ -300,7 +298,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         rc_gallery.setLayoutManager(gridLayoutManager);
         rc_gallery.addItemDecoration(new GridSpacingItemDecoration(gridLayoutManager.getSpanCount(), builder.spacing, builder.includeEdgeSpacing));
-        checkMediaType();
         updateAdapter();
     }
 
@@ -715,10 +712,11 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         public String emptySelectionText;
         public String selectMaxCountErrorText;
         public String selectMinCountErrorText;
-        public @MediaType
-        int mediaType = MediaType.IMAGE;
+        public @MediaType int[] mediaTypes;
         ArrayList<Uri> selectedUriList;
         Uri selectedUri;
+
+        private @DrawableRes int mediaSelectorTextColor = R.drawable.selector_btn_text_color;
 
         public Builder(@NonNull Context context) {
 
@@ -930,8 +928,13 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
             return this;
         }
 
-        public Builder setMediaType(@MediaType int type){
-            this.mediaType = type;
+        public Builder setMediaTypes(@MediaType int[] types){
+            this.mediaTypes = types;
+            return this;
+        }
+
+        public Builder mediaSelectorTextColor(@DrawableRes int mediaSelectorTextColor){
+            this.mediaSelectorTextColor = mediaSelectorTextColor;
             return this;
         }
 
@@ -952,11 +955,10 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         }
 
         @Retention(RetentionPolicy.SOURCE)
-        @IntDef({MediaType.IMAGE, MediaType.VIDEO, MediaType.VIDEO_AND_IMAGE})
+        @IntDef({MediaType.IMAGE, MediaType.VIDEO})
         public @interface MediaType {
             int IMAGE = 1;
             int VIDEO = 2;
-            int VIDEO_AND_IMAGE = 3;
         }
 
     }

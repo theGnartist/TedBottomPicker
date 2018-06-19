@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onPermissionGranted() {
 
+                        @MediaType int[] mediaTypes = {MediaType.IMAGE, MediaType.VIDEO};
                         TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(MainActivity.this)
                                 .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                                     @Override
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                                 //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
                                 .setSelectedUri(selectedUri)
                                 .setTitle("Select Video")
-                                .setMediaType(MediaType.VIDEO_AND_IMAGE)
+                                .setMediaTypes(mediaTypes)
                                 .setPeekHeight(1200)
                                 .create();
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 PermissionListener permissionlistener = new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-
+                        @MediaType int[] mediaTypes = {MediaType.VIDEO};
                         TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(MainActivity.this)
                                 .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                                     @Override
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                                 //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
                                 .setSelectedUri(selectedUri)
                                 .setTitle("Select Video")
-                                .setMediaType(MediaType.VIDEO)
+                                .setMediaTypes(mediaTypes)
                                 .setPeekHeight(1200)
                                 .create();
 
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 PermissionListener permissionlistener = new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-
+                        @MediaType int[] mediaTypes = {MediaType.IMAGE};
                         TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(MainActivity.this)
                                 .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                                     @Override
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 })
                                 //.setPeekHeight(getResources().getDisplayMetrics().heightPixels/2)
-                                .setMediaType(MediaType.IMAGE)
+                                .setMediaTypes(mediaTypes)
                                 .showCameraTile(true)
                                 .showTitle(false)
                                 .setSelectedUri(selectedUri)
