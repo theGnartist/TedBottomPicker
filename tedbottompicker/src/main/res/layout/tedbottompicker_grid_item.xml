@@ -19,6 +19,23 @@
 
 
         />
+    
+    <TextView
+        android:id="@+id/tv_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_rectangle_black"
+        android:textColor="@android:color/white"
+        android:paddingStart="6dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingEnd="6dp"
+        android:textSize="11dp"
+        android:text="1:24"
+        android:layout_margin="5dp"
+        android:layout_gravity="bottom|right"
+        android:visibility="gone"
+        />
 
 
 </gun0912.tedbottompicker.view.TedSquareFrameLayout>

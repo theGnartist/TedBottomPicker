@@ -1,8 +1,10 @@
 package gun0912.tedbottompicker.adapter;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.IntDef;
@@ -13,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,9 +24,11 @@ import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import gun0912.tedbottompicker.R;
 import gun0912.tedbottompicker.TedBottomPicker;
+import gun0912.tedbottompicker.util.MimeTypeUtil;
 import gun0912.tedbottompicker.view.TedSquareFrameLayout;
 import gun0912.tedbottompicker.view.TedSquareImageView;
 
@@ -158,7 +163,26 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
             holder.iv_thumbnail.setImageDrawable(builder.galleryTileDrawable);
 
         } else {
+            holder.tv_timestamp.setVisibility(View.GONE);
             Uri uri = pickerTile.getImageUri();
+            String type = MimeTypeUtil.getMimeType(context, uri);
+            if (MimeTypeUtil.MimeType.VIDEO.equals(type)){
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(context, uri);
+                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                long timeInMillisec = Long.parseLong(time );
+                retriever.release();
+
+                if (timeInMillisec > 0) {
+                    String timeString = String.format(context.getString(R.string.time_string),
+                            TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
+                            TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
+                    );
+                    holder.tv_timestamp.setText(timeString);
+                    holder.tv_timestamp.setVisibility(View.VISIBLE);
+                }
+            }
             if (builder.imageProvider == null) {
                 Glide.with(context)
                         .load(uri)
@@ -296,11 +320,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 
 
         TedSquareImageView iv_thumbnail;
+        TextView tv_timestamp;
 
         public GalleryViewHolder(View view) {
             super(view);
             root = (TedSquareFrameLayout) view.findViewById(R.id.root);
             iv_thumbnail = (TedSquareImageView) view.findViewById(R.id.iv_thumbnail);
+            tv_timestamp = (TextView) view.findViewById(R.id.tv_timestamp);
 
         }
 

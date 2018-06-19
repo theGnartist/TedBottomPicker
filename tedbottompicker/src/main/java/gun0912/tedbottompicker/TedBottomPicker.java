@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gun0912.tedbottompicker.adapter.GalleryAdapter;
+import gun0912.tedbottompicker.util.MimeTypeUtil;
 import gun0912.tedbottompicker.util.RealPathUtil;
 
 public class TedBottomPicker extends BottomSheetDialogFragment {
@@ -577,17 +578,10 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
         return builder.onMultiImageSelectedListener != null;
     }
 
-    private @Builder.MimeType String getMimeType(){
-        switch (builder.mediaType) {
-            case (Builder.MediaType.IMAGE) : return Builder.MimeType.IMAGE;
-            case (Builder.MediaType.VIDEO) : return Builder.MimeType.VIDEO;
-            default: return Builder.MimeType.WILDCARD;
-        }
-    }
 
     private void onActivityResultCamera(final Uri cameraImageUri) {
 
-        String mimeType = getMimeType();
+        String mimeType = MimeTypeUtil.getMimeType(getActivity(), cameraImageUri);
         MediaScannerConnection.scanFile(getContext(), new String[]{cameraImageUri.getPath()}, new String[]{mimeType}, new MediaScannerConnection.MediaScannerConnectionClient() {
             @Override
             public void onMediaScannerConnected() {
@@ -911,15 +905,6 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
             int IMAGE = 1;
             int VIDEO = 2;
         }
-
-        @Retention(RetentionPolicy.SOURCE)
-        @StringDef({MimeType.IMAGE, MimeType.VIDEO, MimeType.WILDCARD})
-        public @interface MimeType {
-            String IMAGE = "image/jpeg";
-            String VIDEO = "video/mp4";
-            String WILDCARD = "*/*";
-        }
-
 
     }
 
