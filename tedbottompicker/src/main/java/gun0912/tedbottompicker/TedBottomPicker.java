@@ -250,7 +250,7 @@ public class TedBottomPicker extends BottomSheetDialogFragment {
     }
 
     private void initMediaToggle() {
-        if (builder.mediaTypes != null  && builder.mediaTypes.length > 0) {
+        if (builder.mediaTypes != null  && builder.mediaTypes.length > 1) {
            view_title_container.setVisibility(View.VISIBLE);
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override

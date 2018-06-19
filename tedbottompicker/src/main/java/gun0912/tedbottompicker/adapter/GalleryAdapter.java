@@ -173,20 +173,24 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
             Uri uri = pickerTile.getImageUri();
             String type = MimeTypeUtil.getMimeType(context, uri);
             if (MimeTypeUtil.MimeType.VIDEO.equals(type)){
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(context, uri);
-                String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                long timeInMillisec = Long.parseLong(time );
-                retriever.release();
+                try {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(context, uri);
+                    String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                    long timeInMillisec = Long.parseLong(time);
+                    retriever.release();
 
-                if (timeInMillisec > 0) {
-                    String timeString = String.format(context.getString(R.string.time_string),
-                            TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
-                            TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
-                    );
-                    holder.tv_timestamp.setText(timeString);
-                    holder.tv_timestamp.setVisibility(View.VISIBLE);
+                    if (timeInMillisec > 0) {
+                        String timeString = String.format(context.getString(R.string.time_string),
+                                TimeUnit.MILLISECONDS.toMinutes(timeInMillisec),
+                                TimeUnit.MILLISECONDS.toSeconds(timeInMillisec) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillisec))
+                        );
+                        holder.tv_timestamp.setText(timeString);
+                        holder.tv_timestamp.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             if (builder.imageProvider == null) {
