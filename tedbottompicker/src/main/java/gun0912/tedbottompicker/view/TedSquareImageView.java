@@ -14,8 +14,10 @@ import gun0912.tedbottompicker.R;
  * Created by Gil on 09/06/2014.
  */
 public class TedSquareImageView extends ImageView {
+    private static final int[] STATE_VIDEO = {R.attr.camera_tile};
 
     String fit_mode;
+    private boolean isVideo = false;
     private Drawable foreground;
 
     public TedSquareImageView(Context context) {
@@ -68,6 +70,20 @@ public class TedSquareImageView extends ImageView {
 
     }
 
+    public void setVideo(boolean video) {
+        isVideo = video;
+        refreshState();
+    }
+
+
+    private void refreshState(){
+        getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                refreshDrawableState();
+            }
+        });
+    }
 
     /**
      * Supply a Drawable that is to be rendered on top of all of the child views
@@ -96,6 +112,14 @@ public class TedSquareImageView extends ImageView {
         invalidate();
     }
 
+    @Override
+    public int[] onCreateDrawableState(int extraSpace) {
+        final int[] drawableState = super.onCreateDrawableState(extraSpace + 2);
+        if (isVideo) {
+            mergeDrawableStates(drawableState, STATE_VIDEO);
+        }
+        return drawableState;
+    }
 
     @Override
     protected boolean verifyDrawable(Drawable who) {

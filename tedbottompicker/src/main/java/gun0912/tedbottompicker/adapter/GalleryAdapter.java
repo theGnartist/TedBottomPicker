@@ -158,12 +158,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         boolean isSelected = false;
 
         if (pickerTile.isCameraTile()) {
+            holder.iv_thumbnail.setVideo(TedBottomPicker.Builder.MediaType.VIDEO == selectedMediaType);
             holder.iv_thumbnail.setBackgroundResource(builder.cameraTileBackgroundResId);
             holder.iv_thumbnail.setImageDrawable(builder.cameraTileDrawable);
         } else if (pickerTile.isGalleryTile()) {
             holder.iv_thumbnail.setBackgroundResource(builder.galleryTileBackgroundResId);
             holder.iv_thumbnail.setImageDrawable(builder.galleryTileDrawable);
-
         } else {
             holder.tv_timestamp.setVisibility(View.GONE);
             Uri uri = pickerTile.getImageUri();

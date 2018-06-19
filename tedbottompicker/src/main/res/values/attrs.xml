@@ -4,6 +4,7 @@
     <declare-styleable name="TedBottomPickerImageView">
         <attr name="foreground" format="reference"/>
         <attr name="fit_mode" format="string"/>
+        <attr name="video" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="TedBottomPickerSquareView">
